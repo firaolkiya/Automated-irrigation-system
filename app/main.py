@@ -17,11 +17,14 @@ async def websocket_endpoint(websocket: WebSocket):
     clients.append(websocket)
 
     data = {
+        "data":{
         "airTemperature": 65.3,
         "airHumidity": 20.3,
         "soilHumidity": 15.3,
         "soilTemperature": 45.3,
         "sensorWorking": "all"
+        },
+        "status":0
     }
 
     while True:

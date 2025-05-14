@@ -1,8 +1,10 @@
-from fastapi import FastAPI, WebSocket
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.encoders import jsonable_encoder
 import asyncio
 from datetime import datetime
 import random
+
+from app.connection_manager import ConnectionManager
 app = FastAPI()
 
 @app.get('/')
@@ -12,11 +14,11 @@ def start():
     }
 
 clients:list[WebSocket] = []
+manager = ConnectionManager()
+
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
-    await websocket.accept()
-    
-    clients.append(websocket)
+    await manager.connect(websocket)
 
     data = {
         "type":"sensor_data",
@@ -32,13 +34,15 @@ async def websocket_endpoint(websocket: WebSocket):
         ],
         "status":0
     }
+    try:
     
 
-    while True:
-        data['data'][0]['airTemperature'] = min(15, random.randint(-10,10)+random.randint(-10,10))
-        data['data'][0]['airHumidity']=min(45, random.randint(-10,10)+random.randint(-7,7))
-        data['data'][0]['soilHumidity']=min(17, random.randint(-10,10)+random.randint(-6,6))
-        data['data'][0]['soilTemperature']=min(20, random.randint(-10,10)+random.randint(-2,3))
-        for client in clients:
-            await websocket.send_json(jsonable_encoder(data))
-        await asyncio.sleep(delay=60)  
+        while True:
+            data['data'][0]['airTemperature'] = min(15, random.randint(-10,10)+random.randint(-10,10))
+            data['data'][0]['airHumidity']=min(45, random.randint(-10,10)+random.randint(-7,7))
+            data['data'][0]['soilHumidity']=min(17, random.randint(-10,10)+random.randint(-6,6))
+            data['data'][0]['soilTemperature']=min(20, random.randint(-10,10)+random.randint(-2,3))
+            await manager.broadcast(jsonable_encoder(data))
+            await asyncio.sleep(delay=60)  
+    except WebSocketDisconnect:
+        manager.disconnect(websocket)

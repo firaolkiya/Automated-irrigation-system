@@ -17,6 +17,7 @@ async def websocket_endpoint(websocket: WebSocket):
     clients.append(websocket)
 
     data = {
+        "type":"sensor_data",
         "data":{
         "airTemperature": 65.3,
         "airHumidity": 20.3,

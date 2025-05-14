@@ -14,7 +14,7 @@ clients:list[WebSocket] = []
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
     
-    clients.ap
+    clients.append(websocket)
 
     data = {
         "airTemperature": 65.3,

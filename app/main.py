@@ -40,7 +40,7 @@ async def websocket_endpoint(websocket: WebSocket):
 
             await manager.broadcast(jsonable_encoder(data))
 
-            await asyncio.sleep(60) 
+            await asyncio.sleep(20) 
     except WebSocketDisconnect:
         manager.disconnect(websocket)
     except Exception as e:

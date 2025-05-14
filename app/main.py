@@ -1,5 +1,6 @@
 from fastapi import FastAPI, WebSocket
 import asyncio
+from datetime import datetime
 
 app = FastAPI()
 
@@ -20,6 +21,7 @@ async def websocket_endpoint(websocket: WebSocket):
         "type":"sensor_data",
         "data":[
             {
+        "timestamp":datetime.now()
         "airTemperature": 65.3,
         "airHumidity": 20.3,
         "soilHumidity": 15.3,

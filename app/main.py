@@ -9,9 +9,12 @@ def start():
         "Message": "Test api"
     }
 
+clients:list[WebSocket] = []
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
+    
+    clients.ap
 
     data = {
         "airTemperature": 65.3,
@@ -22,5 +25,7 @@ async def websocket_endpoint(websocket: WebSocket):
     }
 
     while True:
-        await websocket.send_json(data)
-        await asyncio.sleep(300)  
+        
+        for client in clients:
+            await websocket.send_json(data)
+        await asyncio.sleep(delay=60)  

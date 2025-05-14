@@ -16,7 +16,7 @@ async def websocket_endpoint(websocket: WebSocket):
     
     clients.append(websocket)
 
-    data = {
+    data =[ {
         "type":"sensor_data",
         "data":{
         "airTemperature": 65.3,
@@ -27,6 +27,7 @@ async def websocket_endpoint(websocket: WebSocket):
         },
         "status":0
     }
+    ]
 
     while True:
         

@@ -32,10 +32,10 @@ async def websocket_endpoint(websocket: WebSocket):
     
 
     while True:
-        data['data'][0]['airTemperature'] = max(15, random.randint(-10,10)+random.randint(-10,10))
-        data['data'][0]['airHumidity']=max(45, random.randint(-10,10)+random.randint(-7,7))
-        data['data'][0]['soilHumidity']=max(17, random.randint(-10,10)+random.randint(-6,6))
-        data['data'][0]['soilTemperature']=max(20, random.randint(-10,10)+random.randint(-2,3))
+        data['data'][0]['airTemperature'] = min(15, random.randint(-10,10)+random.randint(-10,10))
+        data['data'][0]['airHumidity']=min(45, random.randint(-10,10)+random.randint(-7,7))
+        data['data'][0]['soilHumidity']=min(17, random.randint(-10,10)+random.randint(-6,6))
+        data['data'][0]['soilTemperature']=min(20, random.randint(-10,10)+random.randint(-2,3))
         for client in clients:
             await websocket.send_json(data)
         await asyncio.sleep(delay=60)  

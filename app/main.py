@@ -1,4 +1,5 @@
 from fastapi import FastAPI, WebSocket
+from fastapi.encoders import jsonable_encoder
 import asyncio
 from datetime import datetime
 import random
@@ -19,14 +20,16 @@ async def websocket_endpoint(websocket: WebSocket):
 
     data = {
         "type":"sensor_data",
-        "data":[{
+        "data":[
+            {
         "timestamp":datetime.now(),
         "airTemperature": 65.3,
         "airHumidity": 20.3,
         "soilHumidity": 15.3,
         "soilTemperature": 45.3,
         "sensorWorking": 5
-        }],
+        }
+        ],
         "status":0
     }
     
@@ -37,5 +40,5 @@ async def websocket_endpoint(websocket: WebSocket):
         data['data'][0]['soilHumidity']=min(17, random.randint(-10,10)+random.randint(-6,6))
         data['data'][0]['soilTemperature']=min(20, random.randint(-10,10)+random.randint(-2,3))
         for client in clients:
-            await websocket.send_json(data)
+            await websocket.send_json(jsonable_encoder(data))
         await asyncio.sleep(delay=60)  
